@@ -1,0 +1,227 @@
+from heapq import heappop, heappush
+
+def flatten(L):
+    while len(L) > 0:
+        yield L[0]
+        L = L[1]
+
+class Grafo:
+ 
+    def __init__(self):
+        self.V = set() 
+        self.E = dict() 
+        self.vecinos = dict() 
+ 
+    def agrega(self, v):
+        self.V.add(v)
+        if not v in self.vecinos: 
+            self.vecinos[v] = set() 
+ 
+    def conecta(self, v, u, peso=1):
+        self.agrega(v)
+        self.agrega(u)
+        self.E[(v, u)] = self.E[(u, v)] = peso 
+        self.vecinos[v].add(u)
+        self.vecinos[u].add(v)
+ 
+    def complemento(self):
+        comp= Grafo()
+        for v in self.V:
+            for w in self.V:
+                if v != w and (v, w) not in self.E:
+                    comp.conecta(v, w, 1)
+        return comp
+
+    def shortest(self, v): 
+        q = [(0, v, ())] 
+        dist = dict()  
+        visited = set() 
+        while len(q) > 0: 
+            (l, u, p) = heappop(q) 
+            if u not in visited: 
+                visited.add(u) 
+                dist[u] = (l,u,list(flatten(p))[::-1] + [u])  	
+            p = (u, p) 
+            for n in self.vecinos[u]: 
+                if n not in visited: 
+                    el = self.E[(u,n)] 
+                    heappush(q, (l + el, n, p))  
+        return dist 
+
+print("Ejemplo de 5 nodos y 10 aristas")
+
+g=Grafo()
+g.conecta('a','b',1)
+g.conecta('a','c',3)
+g.conecta('a','d',5)
+g.conecta('a','e',7)
+g.conecta('b','a',9)
+g.conecta('b','c',11)
+g.conecta('b','d',13)
+g.conecta('b','e',15)
+g.conecta('c','e',17)
+g.conecta('c','d',19)
+
+print(g.shortest('a'))
+
+print("Ejemplo de 10 nodos y 20 aristas")
+
+h=Grafo()
+h.conecta('a','b',1)
+h.conecta('a','c',4)
+h.conecta('a','d',9)
+h.conecta('a','e',16)
+h.conecta('a','f',25)
+h.conecta('a','g',3)
+h.conecta('a','h',7)
+h.conecta('a','i',11)
+h.conecta('a','j',13)
+h.conecta('b','a',5)
+h.conecta('b','c',2)
+h.conecta('b','e',7)
+h.conecta('b','g',9)
+h.conecta('c','b',2)
+h.conecta('c','d',14)
+h.conecta('c','f',11)
+h.conecta('d','h',13)
+h.conecta('e','i',8)
+h.conecta('j','h',3)
+h.conecta('c','f',6)
+
+print(h.shortest('a'))
+
+print("Ejemplo de 15 nodos y 30 aristas")
+i=Grafo()
+i.conecta('a','b',1)
+i.conecta('a','c',4)
+i.conecta('a','d',7)
+i.conecta('a','e',10)
+i.conecta('a','f',13)
+i.conecta('b','g',16)
+i.conecta('b','h',19)
+i.conecta('b','i',6)
+i.conecta('b','j',4)
+i.conecta('b','k',2)
+i.conecta('c','l',3)
+i.conecta('c','m',15)
+i.conecta('c','n',10)
+i.conecta('c','ñ',7)
+i.conecta('d','a',20)
+i.conecta('f','c',2)
+i.conecta('h','e',4)
+i.conecta('j','g',8)
+i.conecta('l','i',6)
+i.conecta('n','k',13)
+i.conecta('b','a',11)
+i.conecta('c','d',2)
+i.conecta('e','f',5)
+i.conecta('g','h',8)
+i.conecta('i','j',6)
+i.conecta('k','l',9)
+i.conecta('m','n',7)
+i.conecta('ñ','e',10)
+i.conecta('c','ñ',8)
+i.conecta('d','k',12)
+
+print(i.shortest('i'))
+
+print("Ejemplo de 20 nodos y 40 aristas")
+j=Grafo()
+j.conecta('a','b',2)
+j.conecta('a','c',4)
+j.conecta('a','d',6)
+j.conecta('a','e',8)
+j.conecta('a','f',10)
+j.conecta('b','g',12)
+j.conecta('b','h',14)
+j.conecta('b','i',3)
+j.conecta('b','j',7)
+j.conecta('b','k',5)
+j.conecta('c','l',9)
+j.conecta('c','m',7)
+j.conecta('c','n',11)
+j.conecta('c','ñ',9)
+j.conecta('c','o',13)
+j.conecta('d','p',20)
+j.conecta('d','q',18)
+j.conecta('d','r',23)
+j.conecta('d','s',21)
+j.conecta('d','a',25)
+j.conecta('b','a',26)
+j.conecta('d','c',5)
+j.conecta('f','e',28)
+j.conecta('h','g',16)
+j.conecta('j','i',1)
+j.conecta('l','k',18)
+j.conecta('n','m',9)
+j.conecta('o','ñ',12)
+j.conecta('q','r',8)
+j.conecta('s','a',30)
+j.conecta('c','b',11)
+j.conecta('e','s',1)
+j.conecta('g','r',13)
+j.conecta('i','q',8)
+j.conecta('k','ñ',8)
+j.conecta('m','k',31)
+j.conecta('ñ','j',7)
+j.conecta('p','f',12)
+j.conecta('r','b',6)
+j.conecta('s','k',17)
+
+print(i.shortest('j'))
+
+print("Ejemplo de 25 nodos y 50 aristas")
+
+k=Grafo()
+k.conecta('a','b',1)
+k.conecta('a','c',4)
+k.conecta('a','d',9)
+k.conecta('a','e',16)
+k.conecta('a','f',25)
+k.conecta('b','g',3)
+k.conecta('b','h',7)
+k.conecta('b','i',11)
+k.conecta('b','j',13)
+k.conecta('b','k',5)
+k.conecta('c','l',2)
+k.conecta('c','m',7)
+k.conecta('c','n',9)
+k.conecta('c','ñ',2)
+k.conecta('c','o',14)
+k.conecta('d','p',11)
+k.conecta('d','q',13)
+k.conecta('d','r',8)
+k.conecta('d','s',3)
+k.conecta('d','t',6)
+k.conecta('e','u',1)
+k.conecta('e','v',3)
+k.conecta('e','w',5)
+k.conecta('e','x',7)
+k.conecta('b','a',9)
+k.conecta('d','c',11)
+k.conecta('f','d',13)
+k.conecta('h','e',15)
+k.conecta('j','g',17)
+k.conecta('l','i',19)
+k.conecta('n','k',26)
+k.conecta('o','m',5)
+k.conecta('q','ñ',28)
+k.conecta('s','p',16)
+k.conecta('u','r',1)
+k.conecta('w','t',18)
+k.conecta('n','v',9)
+k.conecta('o','x',12)
+k.conecta('q','b',8)
+k.conecta('s','a',30)
+k.conecta('b','g',11)
+k.conecta('d','d',1)
+k.conecta('f','x',13)
+k.conecta('h','w',8)
+k.conecta('j','j',8)
+k.conecta('l','m',31)
+k.conecta('n','ñ',7)
+k.conecta('o','a',12)
+k.conecta('x','t',6)
+k.conecta('w','c',17)
+
+print(k.shortest('a'))
